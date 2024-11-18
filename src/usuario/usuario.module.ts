@@ -4,11 +4,12 @@ import { UsuarioController } from './usuario.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Usuario, UsuarioSchema } from './entities/usuario.entity';
 import { Persona, PersonaSchema } from 'src/persona/entities/persona.entity';
+import { CommonService } from 'src/common/common.service';
 
 
 @Module({
   controllers: [UsuarioController],
-  providers: [UsuarioService],
+  providers: [UsuarioService, CommonService],
   imports: [
     MongooseModule.forFeature([{
       name: Usuario.name,

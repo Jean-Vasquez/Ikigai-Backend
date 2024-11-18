@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Usuario } from './entities/usuario.entity';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { Persona } from 'src/persona/entities/persona.entity';
+import { CommonService } from 'src/common/common.service';
 
 @Injectable()
 export class UsuarioService {
@@ -14,7 +15,9 @@ export class UsuarioService {
     private readonly usuarioModel : Model<Usuario>,
 
     @InjectModel(Persona.name)
-    private readonly personaModel : Model<Persona>
+    private readonly personaModel : Model<Persona>,
+
+    private commonService : CommonService
   ){}
 
   async create({idpersona,...createUsuarioDto}: CreateUsuarioDto) {
@@ -22,11 +25,11 @@ export class UsuarioService {
       if(idpersona){
         const persona = new this.personaModel(idpersona)
         const personaSave = await persona.save()
-        const newUsuario = new this.usuarioModel({...CreateUsuarioDto, idpersona: personaSave._id})
+        const newUsuario = new this.usuarioModel({...createUsuarioDto, idpersona: personaSave._id})
         return newUsuario.save()
       }
     }catch(error){
-      console.log(error)
+      this.commonService.handleExceptions(error)
     }
   }
 
@@ -34,15 +37,77 @@ export class UsuarioService {
     return await this.usuarioModel.find().populate('idpersona');
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} usuario`;
+  async findOne(term: string) {
+
+    let usuario: Usuario
+
+    if(isValidObjectId(term)){
+      usuario = await this.usuarioModel.findById(term)
+    }
+    if(!usuario){
+      usuario = (await this.usuarioModel.findOne({usuario:term.trim()}))
+    }
+    if(!usuario){
+      throw new NotFoundException(`usuario con id o nombre de usuario "${term}" no encontrado`)
+    }
+
+    return usuario.populate('idpersona')
   }
 
-  update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    return `This action updates a #${id} usuario`;
+  async update(term: string, updateUsuarioDto: UpdateUsuarioDto) {
+
+    try{
+
+      const usuario = await this.findOne(term)
+      const { idpersona: personaData, ...restoUsuarioData } = updateUsuarioDto;
+
+      if(personaData){
+
+        await this.personaModel.findByIdAndUpdate(
+          usuario.idpersona,
+          personaData,
+          {
+            new:true
+          }
+        )
+      }
+
+      const usuarioupdated = await this.usuarioModel.findByIdAndUpdate(
+        usuario._id,
+        restoUsuarioData,
+        {
+          new:true
+        }
+      ).populate('idpersona');
+      
+      return usuarioupdated;
+
+    }catch(error){
+      this.commonService.handleExceptions(error)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} usuario`;
+  async remove(id: string) {
+    
+    try{
+
+      if(!isValidObjectId(id)){
+        throw new BadRequestException(`Formato de id inválido`)
+      }
+
+      const usuario = await this.usuarioModel.findById(id);
+
+      if(!usuario){
+        throw new NotFoundException(`usuario con id "${id}" no encontrado`)
+      }
+
+      await this.personaModel.findByIdAndDelete(usuario.idpersona);
+      await this.usuarioModel.findByIdAndDelete(id);
+
+      return "Usuario y persona asociada eliminados exitosamente"
+
+    }catch(error){
+      this.commonService.handleExceptions(error)
+    }
   }
 }
