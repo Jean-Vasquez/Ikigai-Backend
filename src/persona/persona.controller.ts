@@ -27,8 +27,8 @@ export class PersonaController {
     return this.personaService.update(term, updatePersonaDto);
   }
 
-  @Delete(':term')
-  remove(@Param('term') term: string) {
-    return this.personaService.remove(term);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.personaService.remove(id);
   }
 }

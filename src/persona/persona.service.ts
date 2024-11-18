@@ -4,13 +4,15 @@ import { UpdatePersonaDto } from './dto/update-persona.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Persona } from './entities/persona.entity';
 import { isValidObjectId, Model } from 'mongoose';
+import { CommonService } from 'src/common/common.service';
 
 @Injectable()
 export class PersonaService {
 
   constructor(
     @InjectModel(Persona.name)
-    private readonly personaModel : Model<Persona>
+    private readonly personaModel : Model<Persona>,
+    private commonService : CommonService
   ){}
 
   async create(createPersonaDto: CreatePersonaDto) {
@@ -18,7 +20,7 @@ export class PersonaService {
       const persona = await this.personaModel.create(createPersonaDto)
       return persona;
     }catch(error){
-      this.handleExceptions(error)
+      this.commonService.handleExceptions(error)
     };
   }
 
@@ -27,7 +29,7 @@ export class PersonaService {
       const personas = await  this.personaModel.find()
       return personas;
     } catch (error) {
-      this.handleExceptions(error)
+      this.commonService.handleExceptions(error)
     } 
   }
 
@@ -59,31 +61,25 @@ export class PersonaService {
       await persona.updateOne(updatePersonaDto)
       return {...persona.toJSON(), ...updatePersonaDto}  
     } catch (error) {
-      this.handleExceptions(error)
+      this.commonService.handleExceptions(error)
     }
     
   }
 
-  async remove(term: string) {
+  async remove(id: string) {
 
-    if(isValidObjectId(term))
-      {
-         await this.personaModel.findByIdAndDelete(term)
-      } 
-      return this.findAll()  
+    try{
+      if(isValidObjectId(id))
+        {
+           await this.personaModel.findByIdAndDelete(id)
+        } 
+        return "Person deleted successfully"  
+    }catch(error){
+      this.commonService.handleExceptions(error)
+    }
   }
 
-  private readonly logger = new Logger(PersonaService.name);
-
-  private handleExceptions(error:any){
-    
-    if(error.code === 11000){
-      this.logger.warn(`Duplicate entry detected: ${JSON.stringify(error.keyValue)}`)
-      throw new BadRequestException(`This exist in the db "${JSON.stringify(error.keyValue)}"`)
-    }
-      this.logger.error(error)
-      throw new InternalServerErrorException(`Can't create Person - Check server logs`)
-    }
+  
 
 
 }

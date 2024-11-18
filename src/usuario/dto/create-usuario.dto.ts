@@ -1,6 +1,7 @@
 import { Type } from "class-transformer";
 import { IsIn, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
 import { CreatePersonaDto } from "src/persona/dto/create-persona.dto";
+import { Persona } from "src/persona/entities/persona.entity";
 
 
 export class CreateUsuarioDto {
@@ -16,7 +17,7 @@ export class CreateUsuarioDto {
     @IsNotEmpty()
     @ValidateNested()
     @Type(()=>CreatePersonaDto)
-    idpersona: CreatePersonaDto;
+    idpersona: Persona;
 
     @IsOptional()
     @IsIn(["cliente","administrador"])    
