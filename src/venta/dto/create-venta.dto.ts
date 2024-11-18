@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, MinLength } from "class-validator";
+import { MetodoPago } from "../entities/venta.entity"; 
 
 export class CreateVentaDto {
     @IsDate()
@@ -10,7 +11,7 @@ export class CreateVentaDto {
     @MinLength(1)
     total: number;
 
-    @IsString()
+    @IsEnum(MetodoPago)
     @IsNotEmpty()
-    metpago: string;
+    metpago: MetodoPago;
 }
