@@ -16,8 +16,8 @@ export class Venta extends Document{
   @Prop({required: true})
   total: number;
 
-  @Prop({required: true})
-  metpago: string;
+  @Prop({required: true, enum: MetodoPago})
+  metpago: MetodoPago;
 
 }
 
