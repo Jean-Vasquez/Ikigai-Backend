@@ -10,7 +10,7 @@ export class Venta extends Document{
   @Prop({type: Types.ObjectId, ref: 'usuario', required: true})
   usuario: Types.ObjectId
 
-  @Prop({ required: true, default: () => new Date() })
+  @Prop({ required: true, type: Date})
   fecha: Date; 
 
   @Prop({required: true})
