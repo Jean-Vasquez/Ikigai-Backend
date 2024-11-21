@@ -1,33 +1,33 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
-
 import { Document } from "mongoose"
+import { Categoria } from "src/common/enums"
 
 @Schema()
 export class Producto extends Document {
 
-    @Prop()
+    @Prop({required: true})
     nombre: string
 
     @Prop({unique: true})
     imagen:string
 
     @Prop()
-    descripcion:string
+    descripcion?:string
 
-    @Prop()
-    categoria: string
+    @Prop({
+        required: true,
+        enum: Categoria
+    })
+    categoria: Categoria
 
-    @Prop()
-    presentacion:number
-
-    @Prop()
+    @Prop({required: true})
     precio:number
 
-    @Prop()
+    @Prop({required: true})
     stock:number
 
-    @Prop()
-    estado:boolean;
+    @Prop({default: true})
+    estado?:boolean;
 }
 
 export const ProductoSchema = SchemaFactory.createForClass(Producto)

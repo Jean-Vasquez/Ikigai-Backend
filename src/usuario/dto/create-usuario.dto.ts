@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
-import { IsIn, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString, MinLength, ValidateNested } from "class-validator";
+import { Rol } from "src/common/enums";
 import { CreatePersonaDto } from "src/persona/dto/create-persona.dto";
 import { Persona } from "src/persona/entities/persona.entity";
 
@@ -11,7 +12,7 @@ export class CreateUsuarioDto {
     usuario: string;
 
     @IsString()
-    
+    @MinLength(8)
     contrasena: string;
 
     @IsNotEmpty()
@@ -20,6 +21,6 @@ export class CreateUsuarioDto {
     idpersona: Persona;
 
     @IsOptional()
-    @IsIn(["cliente","administrador"])    
-    rol: string;
+    @IsEnum(Rol)    
+    rol: Rol;
 }

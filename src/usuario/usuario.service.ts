@@ -92,10 +92,10 @@ export class UsuarioService {
     try{
 
       if(!isValidObjectId(id)){
-        throw new BadRequestException(`Formato de id inválido`)
+        throw new BadRequestException(`El id ${id} no es un formato válido`)
       }
 
-      const usuario = await this.usuarioModel.findById(id);
+      const usuario = await this.usuarioModel.findById(id).populate('idpersona');
 
       if(!usuario){
         throw new NotFoundException(`usuario con id "${id}" no encontrado`)
@@ -104,7 +104,7 @@ export class UsuarioService {
       await this.personaModel.findByIdAndDelete(usuario.idpersona);
       await this.usuarioModel.findByIdAndDelete(id);
 
-      return "Usuario y persona asociada eliminados exitosamente"
+      return usuario
 
     }catch(error){
       this.commonService.handleExceptions(error)

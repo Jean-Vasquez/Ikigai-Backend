@@ -46,7 +46,7 @@ export class PersonaService {
     }
     
     if(!persona){
-      throw new NotFoundException(`persona whith id or N°doc "${term}" not found`)
+      throw new NotFoundException(`Persona con id o N°doc "${term}" no encontrada`)
     }
 
     return persona
@@ -69,11 +69,18 @@ export class PersonaService {
   async remove(id: string) {
 
     try{
-      if(isValidObjectId(id))
+      if(!isValidObjectId(id))
         {
-           await this.personaModel.findByIdAndDelete(id)
+           throw new BadRequestException(`El id ${id} no es un formato válido`)
         } 
-        return "Person deleted successfully"  
+      
+        const personEliminada = await this.personaModel.findByIdAndDelete(id)
+
+        if(!personEliminada){
+          throw new NotFoundException(`Persona con id ${id} no existe`)
+        }
+        return personEliminada
+        
     }catch(error){
       this.commonService.handleExceptions(error)
     }
