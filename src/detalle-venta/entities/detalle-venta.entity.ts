@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
+import { Producto } from 'src/productos/entities/producto.entity';
 
 @Schema()
 export class DetalleVenta extends Document{
@@ -7,14 +8,14 @@ export class DetalleVenta extends Document{
   @Prop({ required: true })
   cantidadprod: number;
   
-  @Prop({required: true })
-  subtotal: number;
+  @Prop()
+  subtotal?: number;
 
   @Prop({
-    type:[{type: mongoose.Schema.Types.ObjectId,
-      ref: 'Producto'}]
+    type: mongoose.Schema.Types.ObjectId,
+      ref: 'Producto'
   })
-  productosAsociados: string[];
+  idproducto: string;
   
 }
 
