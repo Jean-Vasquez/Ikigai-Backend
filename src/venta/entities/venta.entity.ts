@@ -7,7 +7,7 @@ export enum MetodoPago{
 @Schema()
 export class Venta extends Document{
 
-  @Prop({type: Types.ObjectId, ref: 'usuario', required: true})
+  @Prop({type: Types.ObjectId, ref: 'Usuario', required: true})
   usuario: Types.ObjectId
 
   @Prop({ required: true, type: Date})
