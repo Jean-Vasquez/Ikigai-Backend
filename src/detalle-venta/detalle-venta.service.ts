@@ -1,23 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DetalleVenta,DetalleVentaDocument } from './entities/detalle-venta.entity';
+import { DetalleVenta } from './entities/detalle-venta.entity';
 import { CreateDetalleVentaDto } from './dto/create-detalle-venta.dto';
 import { UpdateDetalleVentaDto } from './dto/update-detalle-venta.dto';
-
-//Este decorador marca la clase `DetalleVentaService` como un servicio que puede ser inyectado en otros componentes (como controladores) dentro de la aplicación.
+import { CommonService } from 'src/common/common.service';
+import { Producto } from 'src/productos/entities/producto.entity';
 @Injectable()
 export class DetalleVentaService {
+
   constructor(
-    //decorador para inyectar el modelo de Mongoose 
-    @InjectModel(DetalleVenta.name) private detalleVentaModel: Model<DetalleVentaDocument>,
+    @InjectModel(DetalleVenta.name)
+    private detalleVentaModel: Model<DetalleVenta>,
+    @InjectModel(Producto.name)
+    private productoModel: Model<Producto>,
+    private commonService : CommonService
   ) {}
 
-  //Crea un nuevo detalle de venta.
-  async create(createDetalleVentaDto: CreateDetalleVentaDto): Promise<DetalleVenta> {
-    const createdDetalleVenta = new this.detalleVentaModel(createDetalleVentaDto);
-    return createdDetalleVenta.save();
-  }
+  /* async create({productosAsociados, ...createDetalleVentaDto}: CreateDetalleVentaDto){
+    try{
+
+      const findProduct = await this.productoModel.find(productosAsociados)
+      if(!findProduct) throw new NotFoundException('Uno o más productos no existen en la base de datos');
+      
+      const calcularSubT = findProduct.reduce((sum, producto)=> {
+        return sum + producto.precio;
+      }, 0);
+      
+      const newDetVent = new this.detalleVentaModel({
+        ...createDetalleVentaDto,
+        productosAsociados,
+        subtotal: createDetalleVentaDto.subtotal || calcularSubT,
+      });
+
+      return await newDetVent.save()
+    }catch(error){
+      this.commonService.handleExceptions(error)
+    }
+  } */
 
   //Recupera todos los detalles de venta.
   async findAll(): Promise<DetalleVenta[]> {

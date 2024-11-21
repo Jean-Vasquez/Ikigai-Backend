@@ -1,25 +1,21 @@
-import { IsInt, IsDecimal, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsInt, IsDecimal, Min, IsNotEmpty, ValidateNested, IsArray, ArrayNotEmpty, IsMongoId, IsNumber } from 'class-validator';
+import { CreateProductoDto } from 'src/productos/dto/create-producto.dto';
+import { Producto } from 'src/productos/entities/producto.entity';
 
 export class CreateDetalleVentaDto {
-  
-  // Valida que el valor de `iddetalleventa` sea un número entero.
-  @IsInt()
-  iddetalleventa: number;
-  
-  @IsInt()
-  idventa: number;
-
- // @IsInt()
-  //idproducto: number;
-
-  //@IsDecimal()
-  //precioprod: number;
 
   @IsInt()
-  //asegura que el valor mínimo permitido sea 1
   @Min(1)
   cantidadprod: number;
- // Valida que el valor de subtotal sea un número decimal.
-  @IsDecimal()
+ 
+  @IsNumber({maxDecimalPlaces: 2})
+  @Min(1)
   subtotal: number;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsMongoId({ each: true })
+  productosAsociados: string[];
+
 }

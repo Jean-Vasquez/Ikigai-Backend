@@ -1,5 +1,6 @@
-import { IsBoolean, IsDateString, IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, 
-    MaxDate, MaxLength, MinLength, ValidateIf } from "class-validator";
+import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, 
+    MaxLength, MinLength, ValidateIf } from "class-validator";
+import { Tipodoc } from "src/common/enums";
     
     
     export class CreatePersonaDto {
@@ -17,8 +18,8 @@ import { IsBoolean, IsDateString, IsEmail, IsIn, IsNotEmpty, IsOptional, IsStrin
         @MinLength(1)
         apellidos: string;
         
-        @IsIn(["DNI", "PASAPORTE", "CARNET_EXTRANJERIA"])
-        tipodoc: string;
+        @IsEnum(Tipodoc)
+        tipodoc: Tipodoc;
     
         @IsDateString()
         @IsNotEmpty()
