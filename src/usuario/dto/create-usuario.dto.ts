@@ -12,13 +12,8 @@ export class CreateUsuarioDto {
     usuario: string;
 
     @IsString()
-<<<<<<< HEAD
-    @MinLength(8)
-    contrasena: string;
-=======
     @MinLength(6)
     contrasena?: string;
->>>>>>> e8894db9521f64653273d005fc8b09d2ca960937
 
     @IsNotEmpty()
     @ValidateNested()

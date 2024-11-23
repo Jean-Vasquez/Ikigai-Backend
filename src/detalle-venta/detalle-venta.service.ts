@@ -20,7 +20,7 @@ export class DetalleVentaService {
 
   async create(createDetalleVentaDto: CreateDetalleVentaDto){
 
-    const {idproducto, cantidadprod, subtotal} = createDetalleVentaDto;
+    const {idproducto, cantidadprod} = createDetalleVentaDto;
 
     try{
 

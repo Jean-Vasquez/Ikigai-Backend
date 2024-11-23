@@ -22,13 +22,4 @@ export class DetalleVentaController {
     return this.detalleVentaService.findOne(id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateDetalleVentaDto: UpdateDetalleVentaDto) {
-    return this.detalleVentaService.update(id, updateDetalleVentaDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.detalleVentaService.remove(id);
-  }
 }

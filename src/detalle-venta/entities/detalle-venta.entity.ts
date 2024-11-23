@@ -9,7 +9,7 @@ export class DetalleVenta extends Document{
   cantidadprod: number;
   
   @Prop()
-  subtotal?: number;
+  subtotal: number;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
