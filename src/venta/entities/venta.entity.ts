@@ -1,9 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
+import { MetodoPago } from "src/common/enums";
 
-export enum MetodoPago{
-  Tarjeta = "Tarjeta",
-}
 @Schema()
 export class Venta extends Document{
 
@@ -18,6 +16,9 @@ export class Venta extends Document{
 
   @Prop({required: true, enum: MetodoPago})
   metpago: MetodoPago;
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'DetalleVenta' }] })
+  detalleVenta: Types.Array<Types.ObjectId>;
 
 }
 

@@ -20,12 +20,11 @@ export class VentaService {
   }
 
   findAll() {
-    return this.ventaModel.find();
+    return this.ventaModel.find().populate('detalleVenta');
   }
 
-  findOne(id: string) {
-    
-    return this.ventaModel.findById(id);
+  findOne(id: string) {    
+    return this.ventaModel.findById(id).populate('detalleVenta');
   }
 
   async update(id: string, updateVentaDto: UpdateVentaDto) {

@@ -20,7 +20,7 @@ export class DetalleVentaService {
 
   async create(createDetalleVentaDto: CreateDetalleVentaDto){
 
-    const {idproducto, cantidadprod} = createDetalleVentaDto;
+    const {idproducto, cantidadprod, idventa} = createDetalleVentaDto;
 
     try{
 
@@ -43,7 +43,8 @@ export class DetalleVentaService {
       const detVent = new this.detalleVentaModel({
         cantidadprod,
         subtotal,
-        idproducto
+        idproducto,
+        idventa,
       });
 
       const detVentGuardado = await detVent.save();
@@ -51,7 +52,7 @@ export class DetalleVentaService {
       producto.stock -= cantidadprod;
       await producto.save();
 
-      return detVentGuardado.populate('idproducto');
+      return (await detVentGuardado.populate('idproducto')).populate('idventa');
 
     }catch(error){
       this.commonService.handleExceptions(error)
@@ -61,7 +62,10 @@ export class DetalleVentaService {
   async findAll(){
 
   try {
-    return await this.detalleVentaModel.find().populate('idproducto');
+    return await this.detalleVentaModel
+    .find()
+    .populate('idproducto')
+    .populate('idventa');
   } catch (error) {
     this.commonService.handleExceptions(error)
   }   
@@ -70,17 +74,23 @@ export class DetalleVentaService {
 
   async findOne(id: string){
 
-    let detVent : DetalleVenta
+    try {
+      if (!isValidObjectId(id)) {
+        throw new NotFoundException(`Detalle de venta con id "${id}" no encontrado`);
+      }
 
-    if(isValidObjectId(id)){
-      detVent = await this.detalleVentaModel.findById(id)
-    } 
-    if(!id){
+      const detVent = await this.detalleVentaModel
+      .findById(id)
+      .populate('idproducto') 
+      .populate('idventa');   
+      
+    if(!detVent){
       throw new NotFoundException(`Detalle de venta con id "${id}" no encontrado`)
     }
 
     return detVent
+  } catch (error){
+    this.commonService.handleExceptions(error)
   }
-
-
+}
 }
