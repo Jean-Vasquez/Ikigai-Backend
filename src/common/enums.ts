@@ -17,3 +17,7 @@ export enum Categoria {
     FIGURAS = 'figuras',
     CUADROS = 'cuadros'
 }
+
+export enum MetodoPago{
+  TARJETA = "Tarjeta",
+}

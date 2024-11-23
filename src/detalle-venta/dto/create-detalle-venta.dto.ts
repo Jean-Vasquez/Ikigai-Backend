@@ -9,4 +9,8 @@ export class CreateDetalleVentaDto {
   @IsString()
   idproducto: string;
 
+  @IsNotEmpty()
+  @IsString()
+  idventa: string;
+
 }

@@ -16,6 +16,10 @@ export class DetalleVenta extends Document{
       ref: 'Producto'
   })
   idproducto: string;
+
+  @Prop({type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Venta'})
+  idventa: string;
   
 }
 
