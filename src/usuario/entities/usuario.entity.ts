@@ -10,7 +10,7 @@ export class Usuario extends Document{
     usuario: string;
 
     @Prop()
-    contrasena: string;
+    contrasena?: string;
 
     @Prop({
         type: mongoose.Schema.Types.ObjectId,
