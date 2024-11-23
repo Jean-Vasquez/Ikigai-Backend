@@ -1,25 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-
-export type DetalleVentaDocument = DetalleVenta & Document;
+import mongoose, { Document } from 'mongoose';
+import { Producto } from 'src/productos/entities/producto.entity';
 
 @Schema()
-export class DetalleVenta {
+export class DetalleVenta extends Document{
 
   @Prop({ required: true })
-  iddetalleventa: number;
-
-  //@Prop({ required: true })
-  //idproducto: number;
-
-  //@Prop({ type: Number, required: true })
-  //precioprod: number;
-
-  @Prop({ type: Number, required: true })
   cantidadprod: number;
-
-  @Prop({ type: Number, required: true })
+  
+  @Prop()
   subtotal: number;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+      ref: 'Producto'
+  })
+  idproducto: string;
+  
 }
 
 export const DetalleVentaSchema = SchemaFactory.createForClass(DetalleVenta);

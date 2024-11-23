@@ -1,4 +1,5 @@
-import { IsBoolean, IsDecimal, IsNotEmpty, IsNumber, IsString, Min, MinLength } from "class-validator"
+import { IsBoolean, IsEnum, IsNumber, IsOptional, IsPositive, IsString, Min, MinLength } from "class-validator"
+import { Categoria } from "src/common/enums"
 
 export class CreateProductoDto {
 
@@ -11,29 +12,23 @@ export class CreateProductoDto {
     imagen:string
 
     @IsString()
-    @MinLength(1)
- 
+    @IsOptional()
     descripcion:string
 
-    @IsString()
-    @MinLength(1)
+    @IsEnum(Categoria)
+    categoria: Categoria
 
-    categoria: string
-
-    @IsNumber()
-    @Min(1)
-    presentacion:number
-
-    @IsDecimal()
-    @Min(1)
+    @IsNumber({maxDecimalPlaces: 2})
+    @IsPositive()
     precio:number
 
     @IsNumber()
+    @IsPositive()
     @Min(1)
     stock:number
 
+    @IsOptional()
     @IsBoolean()
-    @MinLength(1)
     estado:boolean;
 
 

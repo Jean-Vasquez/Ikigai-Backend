@@ -12,6 +12,6 @@ export class CommonService {
       throw new BadRequestException(`This exist in the db "${JSON.stringify(error.keyValue)}"`)
     }
       this.logger.error(error)
-      throw new InternalServerErrorException(`Can't create Person - Check server logs`)
+      throw new InternalServerErrorException(`Can't create Object - Check server logs`)
     }
 }
