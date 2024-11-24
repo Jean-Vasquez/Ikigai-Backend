@@ -157,7 +157,7 @@ export class UsuarioService {
 
     return{
         user: rest,
-        token: this.getJwtToken({id: user.id})
+        token: this.getJwtToken({id: user.id, rol: rest.rol})
     }
 
 
