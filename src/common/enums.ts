@@ -19,5 +19,5 @@ export enum Categoria {
 }
 
 export enum MetodoPago{
-  TARJETA = "Tarjeta",
+  TARJETA = "tarjeta",
 }
