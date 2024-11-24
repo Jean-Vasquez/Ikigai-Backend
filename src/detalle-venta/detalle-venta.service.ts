@@ -5,6 +5,7 @@ import { DetalleVenta } from './entities/detalle-venta.entity';
 import { CreateDetalleVentaDto } from './dto/create-detalle-venta.dto';
 import { CommonService } from 'src/common/common.service';
 import { Producto } from 'src/productos/entities/producto.entity';
+import { ProductosService } from 'src/productos/productos.service';
 @Injectable()
 export class DetalleVentaService {
 
@@ -15,24 +16,18 @@ export class DetalleVentaService {
     @InjectModel(Producto.name)
     private productoModel: Model<Producto>,
 
-    private commonService : CommonService
+    private commonService : CommonService,
+
+    private readonly productoService : ProductosService
   ) {}
 
   async create(createDetalleVentaDto: CreateDetalleVentaDto){
 
-    const {idproducto, cantidadprod, idventa} = createDetalleVentaDto;
+    const {idproducto, cantidadprod} = createDetalleVentaDto;
 
     try{
 
-      if(!isValidObjectId(idproducto)){
-        throw new BadRequestException('El id del producto no es un ObjectId válido')
-      }
-
-      const producto = await this.productoModel.findById(idproducto);
-
-      if(!producto){
-        throw new NotFoundException(`El producto con id ${idproducto} no existe`)
-      }
+      const producto = await this.productoService.findOne(idproducto)
 
       if(producto.stock < cantidadprod){
         throw new BadRequestException(`El stock del producto (${producto.stock}) es insuficiente para la cantidad solicitud `)
@@ -44,7 +39,6 @@ export class DetalleVentaService {
         cantidadprod,
         subtotal,
         idproducto,
-        idventa,
       });
 
       const detVentGuardado = await detVent.save();
@@ -52,7 +46,7 @@ export class DetalleVentaService {
       producto.stock -= cantidadprod;
       await producto.save();
 
-      return (await detVentGuardado.populate('idproducto')).populate('idventa');
+      return detVentGuardado;
 
     }catch(error){
       this.commonService.handleExceptions(error)
@@ -64,8 +58,7 @@ export class DetalleVentaService {
   try {
     return await this.detalleVentaModel
     .find()
-    .populate('idproducto')
-    .populate('idventa');
+    .populate('idproducto');
   } catch (error) {
     this.commonService.handleExceptions(error)
   }   
@@ -81,8 +74,7 @@ export class DetalleVentaService {
 
       const detVent = await this.detalleVentaModel
       .findById(id)
-      .populate('idproducto') 
-      .populate('idventa');   
+      .populate('idproducto');   
       
     if(!detVent){
       throw new NotFoundException(`Detalle de venta con id "${id}" no encontrado`)

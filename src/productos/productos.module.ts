@@ -14,6 +14,7 @@ import { CommonService } from 'src/common/common.service';
         schema: ProductoSchema 
     }
   ])
-  ]
+  ],
+  exports:[MongooseModule,ProductosService]
 })
 export class ProductosModule {}
