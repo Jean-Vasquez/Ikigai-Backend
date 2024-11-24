@@ -1,17 +1,21 @@
-import { IsDate, IsDateString, IsEnum, IsNotEmpty, IsNumber, Min } from "class-validator";
+import { Type } from "class-transformer";
+import { ArrayNotEmpty, IsArray, IsEnum, IsNotEmpty, IsString, ValidateNested } from "class-validator";
 import { MetodoPago } from "src/common/enums";
+import { CreateDetalleVentaDto } from "src/detalle-venta/dto/create-detalle-venta.dto";
 
 export class CreateVentaDto {
-    @IsDateString()
-    @IsNotEmpty()
-    fecha: Date;
 
-    @IsNumber()
     @IsNotEmpty()
-    @Min(1)
-    total: number;
+    @IsString()
+    usuario: string
 
+    @IsNotEmpty()
     @IsEnum(MetodoPago)
-    @IsNotEmpty()
     metpago: string;
+
+    @IsArray()
+    @ArrayNotEmpty()
+    @ValidateNested()
+    @Type(() => CreateDetalleVentaDto)
+    detalleVenta: CreateDetalleVentaDto[]
 }

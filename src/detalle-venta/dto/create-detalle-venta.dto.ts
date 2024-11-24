@@ -1,4 +1,4 @@
-import { IsInt, Min, IsNotEmpty, IsNumber, IsString, IsOptional,  } from 'class-validator';
+import { IsInt, Min, IsNotEmpty, IsString } from 'class-validator';
 export class CreateDetalleVentaDto {
 
   @IsInt()
@@ -8,9 +8,5 @@ export class CreateDetalleVentaDto {
   @IsNotEmpty()
   @IsString()
   idproducto: string;
-
-  @IsNotEmpty()
-  @IsString()
-  idventa: string;
 
 }

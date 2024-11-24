@@ -8,7 +8,7 @@ export class Venta extends Document{
   @Prop({type: Types.ObjectId, ref: 'Usuario', required: true})
   usuario: Types.ObjectId
 
-  @Prop({ required: true, type: Date})
+  @Prop({type: Date, default: Date.now})
   fecha: Date; 
 
   @Prop({required: true})
@@ -18,7 +18,7 @@ export class Venta extends Document{
   metpago: MetodoPago;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'DetalleVenta' }] })
-  detalleVenta: Types.Array<Types.ObjectId>;
+  detalleVenta: string[];
 
 }
 
