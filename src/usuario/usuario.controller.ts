@@ -8,8 +8,8 @@ import { loginDto } from './dto/login,dto';
 export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
-  @Post()
-  create(@Body() createUsuarioDto: CreateUsuarioDto) {
+  @Post('registro')
+  async registrar(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuarioService.create(createUsuarioDto);
   }
 
@@ -34,9 +34,7 @@ export class UsuarioController {
   }
 
   @Post('/login')
-  login(@Body() dtoLogin : loginDto){
-    return this.usuarioService.loginUser(dtoLogin)
+  login(@Body() dtoLogin: loginDto) {
+    return this.usuarioService.loginUser(dtoLogin);
   }
-  
-
 }

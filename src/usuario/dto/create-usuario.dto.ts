@@ -4,9 +4,7 @@ import { Rol } from "src/common/enums";
 import { CreatePersonaDto } from "src/persona/dto/create-persona.dto";
 import { Persona } from "src/persona/entities/persona.entity";
 
-
 export class CreateUsuarioDto {
-
     @IsString()
     @MinLength(8)
     usuario: string;
@@ -17,10 +15,10 @@ export class CreateUsuarioDto {
 
     @IsNotEmpty()
     @ValidateNested()
-    @Type(()=>CreatePersonaDto)
+    @Type(() => CreatePersonaDto)
     idpersona: Persona;
 
     @IsOptional()
-    @IsEnum(Rol)    
+    @IsEnum(Rol)
     rol: Rol;
 }
