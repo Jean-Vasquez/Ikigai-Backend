@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { RolAdministradorGuard } from 'src/usuario/guard/rol-administrador.guard';
 import { RolTodosGuard } from 'src/usuario/guard/rol-todos.guard';
 import { RolClienteGuard } from 'src/usuario/guard/rol-cliente.guard';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('producto')
 export class ProductosController {
@@ -18,8 +19,8 @@ export class ProductosController {
 
   @Get()
   @UseGuards(RolTodosGuard)//ejemplo para todos los usurios cliente y administrador
-  findAll() {
-    return this.productosService.findAll();
+  findAll(@Query() paginationDto : PaginationDto) {
+    return this.productosService.findAll(paginationDto);
   }
 
   @Get(':term')
