@@ -12,12 +12,23 @@ export enum Rol {
 
 export enum Categoria {
     TAZAS = 'tazas',
-    ACCESORIOS = 'accesosios',
+    ACCESORIOS = 'accesorios',
     PELUCHES = 'peluches',
     FIGURAS = 'figuras',
     CUADROS = 'cuadros'
 }
 
 export enum MetodoPago{
-  TARJETA = "tarjeta",
+  TARJETA = 'tarjeta',
+}
+
+export enum SortField{
+  NOMBRE = 'nombre',
+  PRECIO = 'precio',
+  STOCK = 'stock'
+}
+
+export enum Sort{
+  ASC = 'asc',
+  DESC = 'desc'
 }

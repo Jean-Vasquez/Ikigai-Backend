@@ -29,13 +29,15 @@ export class ProductosService {
   async findAll(paginationDto: PaginationDto) {
     try {
 
-      const { limit = 5, offset = 0 } = paginationDto;
+      const {offset = 0, sortOrder, sortField} = paginationDto;
+
+      const sortDirection = sortOrder === 'asc' ? 1 : -1;
 
       const productos = await this.productoModel.find()
-      .limit(limit)
+      .limit(10)
       .skip(offset)
-      .sort({nombre:1})
-      .select('-__v -_id')
+      .sort({[sortField]: sortDirection})
+      .select('-__v')
       return productos
     } catch (error) {
       this.commonService.handleExceptions(error)
