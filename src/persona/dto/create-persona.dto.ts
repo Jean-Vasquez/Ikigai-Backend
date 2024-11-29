@@ -1,6 +1,7 @@
 import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, 
-    MaxLength, MinLength, ValidateIf } from "class-validator";
+    MaxLength, MinLength, Validate, ValidateIf } from "class-validator";
 import { Tipodoc } from "src/common/enums";
+import { ValidateDateOfBirth } from "src/common/Validaciones/validate-date-of-birth";
     
     
     export class CreatePersonaDto {
@@ -21,11 +22,9 @@ import { Tipodoc } from "src/common/enums";
         @IsEnum(Tipodoc)
         tipodoc: Tipodoc;
     
-        @IsDateString()
         @IsNotEmpty()
-        @ValidateIf((o) => o.fechanaci) //Valida si existe la fecha
-        //MinDate no funciona correctamente - solo acepta tipo date xd
-        //falta validar que sea mayor de edad para registrarse
+        @IsDateString()  // Validación para asegurarse de que sea una fecha
+        @Validate(ValidateDateOfBirth)  // Validación personalizada para verificar si la persona tiene 18 años
         fechanaci: string;
     
         @IsString()
