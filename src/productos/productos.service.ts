@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Producto } from './entities/producto.entity';
@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { isValidObjectId, Model } from 'mongoose';
 import { CommonService } from 'src/common/common.service';
 import e from 'express';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ProductosService {
@@ -25,9 +26,18 @@ export class ProductosService {
     }
   }
 
-  async findAll() {
+  async findAll(paginationDto: PaginationDto) {
     try {
+
+      const {offset = 0, sortOrder, sortField} = paginationDto;
+
+      const sortDirection = sortOrder === 'asc' ? 1 : -1;
+
       const productos = await this.productoModel.find()
+      .limit(10)
+      .skip(offset)
+      .sort({[sortField]: sortDirection})
+      .select('-__v')
       return productos
     } catch (error) {
       this.commonService.handleExceptions(error)
