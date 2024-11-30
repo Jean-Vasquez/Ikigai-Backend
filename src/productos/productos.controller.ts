@@ -18,7 +18,7 @@ export class ProductosController {
   }
 
   @Get()
- /*  @UseGuards(RolTodosGuard) *///ejemplo para todos los usurios cliente y administrador
+  @UseGuards(RolTodosGuard)//ejemplo para todos los usurios cliente y administrador
   findAll(@Query() paginationDto : PaginationDto) {
     return this.productosService.findAll(paginationDto);
   }

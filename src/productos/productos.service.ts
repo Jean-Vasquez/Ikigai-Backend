@@ -3,9 +3,8 @@ import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
 import { Producto } from './entities/producto.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { FilterQuery, isValidObjectId, Model } from 'mongoose';
 import { CommonService } from 'src/common/common.service';
-import e from 'express';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
@@ -29,16 +28,26 @@ export class ProductosService {
   async findAll(paginationDto: PaginationDto) {
     try {
 
-      const {offset = 0, sortOrder, sortField} = paginationDto;
+      const {offset = 0, sortOrder, sortField, categoria} = paginationDto;
 
       const sortDirection = sortOrder === 'asc' ? 1 : -1;
 
+      let filter : FilterQuery<Producto> = {}
+      if(categoria) filter.categoria = categoria
+    
       const productos = await this.productoModel.find()
+      .find(filter)
       .limit(10)
       .skip(offset)
       .sort({[sortField]: sortDirection})
       .select('-__v')
-      return productos
+
+      const totalDocuments = await this.productoModel.countDocuments(filter);
+      
+      return {
+        productos,
+        totalDocuments
+      }
     } catch (error) {
       this.commonService.handleExceptions(error)
     }
