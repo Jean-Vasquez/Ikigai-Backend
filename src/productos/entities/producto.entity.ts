@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { Document } from "mongoose"
 import { Categoria } from "src/common/enums"
 
-@Schema()
+@Schema({timestamps:true})
 export class Producto extends Document {
 
     @Prop({required: true})
@@ -26,8 +26,6 @@ export class Producto extends Document {
     @Prop({required: true})
     stock:number
 
-    @Prop({default: true})
-    estado?:boolean;
 }
 
 export const ProductoSchema = SchemaFactory.createForClass(Producto)

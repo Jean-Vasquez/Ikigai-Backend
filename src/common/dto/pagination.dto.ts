@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsOptional, IsPositive, Min } from "class-validator";
-import { Sort, SortField } from "../enums";
+import { IsEnum, IsOptional, Min } from "class-validator";
+import { Categoria, Sort, SortField } from "../enums";
 
 export class PaginationDto {
 
@@ -16,4 +16,8 @@ export class PaginationDto {
     @IsOptional()
     @IsEnum(Sort)
     sortOrder: Sort
+
+    @IsOptional()
+    @IsEnum(Categoria)
+    categoria: Categoria
 }
