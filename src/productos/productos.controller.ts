@@ -12,29 +12,43 @@ export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
 
   @Post()
-  @UseGuards(RolAdministradorGuard)//ejemplo para el administrador
+  @UseGuards(RolAdministradorGuard)//esta petición solo puede usarla el administrador
   create(@Body() createProductoDto: CreateProductoDto) {
     return this.productosService.create(createProductoDto);
   }
 
   @Get()
-  @UseGuards(RolTodosGuard)//ejemplo para todos los usurios cliente y administrador
+  @UseGuards(RolAdministradorGuard)//esta petición solo puede usarla el administrador
   findAll(@Query() paginationDto : PaginationDto) {
     return this.productosService.findAll(paginationDto);
   }
 
+  @Get('cliente')
+  @UseGuards(RolTodosGuard)//esta petición es para el cliente y administrador
+  findProductsClient(@Query() paginationDto : PaginationDto) {
+    return this.productosService.findProductsClient(paginationDto);
+  }
+
+  @Get('nuevo')
+  @UseGuards(RolTodosGuard)//esta petición es para el cliente y administrador
+  findNewProducts(@Query() paginationDto : PaginationDto) {
+    return this.productosService.findNewProducts(paginationDto);
+  }
+
   @Get(':term')
-  @UseGuards(RolClienteGuard)//ejemplo para el cliente
+  @UseGuards(RolTodosGuard)//esta petición es para el cliente y administrador
   findOne(@Param('term') term: string) {
     return this.productosService.findOne(term);
   }
 
   @Patch(':term')
+  @UseGuards(RolAdministradorGuard)//esta petición solo puede usarla el administrador
   update(@Param('term') term: string, @Body() updateProductoDto: UpdateProductoDto) {
     return this.productosService.update(term, updateProductoDto);
   }
 
   @Delete(':_id')
+  @UseGuards(RolAdministradorGuard)//esta petición solo puede usarla el administrador
   remove(@Param('_id') _id: string) {
     return this.productosService.remove(_id);
   }

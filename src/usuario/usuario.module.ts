@@ -27,6 +27,7 @@ import { ConfigModule } from '@nestjs/config';
     secret: process.env.JWT_SEED,
     signOptions: {expiresIn: '6h'}    
   })
-  ]
+  ],
+  exports:[ MongooseModule, UsuarioService]
 })
 export class UsuarioModule {}
