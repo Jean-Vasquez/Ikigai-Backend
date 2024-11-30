@@ -8,6 +8,7 @@ import {
 import { JwtService} from '@nestjs/jwt';
 
 import { Request } from 'express';
+import { JwtPayLoad } from '../interfaces/JWT.interface';
 
 @Injectable()
 export class RolAdministradorGuard implements CanActivate {
@@ -22,11 +23,11 @@ export class RolAdministradorGuard implements CanActivate {
     //validacion si hay token
     const token = this.extractToken(request)
     if(!token)
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No hay token en la petición');
 
     try {
       //verificar si tiene la firma
-      const payload = await this.jwtService.verifyAsync(
+      const payload = await this.jwtService.verifyAsync<JwtPayLoad>(
         token,
         {
           secret: process.env.JWT_SEED
@@ -35,11 +36,13 @@ export class RolAdministradorGuard implements CanActivate {
 
       //verificar si existe e payload
       if(!payload)
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('No hay token en la petición');
 
       //verificar si el rol es administrador
       if(payload.rol !== 'administrador')
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Necesitas ser administrador');
+
+      request['user'] = payload.id
 
       return true;
     } catch (error) {

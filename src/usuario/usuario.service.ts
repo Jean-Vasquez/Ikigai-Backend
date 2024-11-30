@@ -8,7 +8,7 @@ import { Persona } from 'src/persona/entities/persona.entity';
 import { CommonService } from 'src/common/common.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayLoad } from './interfaces/JWT.interface';
-import { loginDto } from './dto/login,dto';
+import { loginDto } from './dto/login.dto';
 import * as bcryptjs from 'bcrypt'
 
 
@@ -62,6 +62,18 @@ export class UsuarioService {
     return await this.usuarioModel.find().populate('idpersona');
   }
 
+
+  async findUserById(id: string){
+
+    const user = await this.usuarioModel.findById(id)
+
+    const {contrasena, ...rest} = user.toJSON()
+
+    return rest
+
+
+  }
+
   async findOne(term: string) {
 
     let usuario: Usuario
@@ -110,33 +122,7 @@ export class UsuarioService {
     }catch(error){
       this.commonService.handleExceptions(error)
     }
-  }
-
-  async remove(id: string) {
-    
-    try{
-
-      if(!isValidObjectId(id)){
-        throw new BadRequestException(`El id ${id} no es un formato válido`)
-      }
-
-      const usuario = await this.usuarioModel.findById(id).populate('idpersona');
-
-      if(!usuario){
-        throw new NotFoundException(`usuario con id "${id}" no encontrado`)
-      }
-
-      await this.personaModel.findByIdAndDelete(usuario.idpersona);
-      await this.usuarioModel.findByIdAndDelete(id);
-
-      return usuario
-
-    }catch(error){
-      this.commonService.handleExceptions(error)
-    }
-  }
-
-
+  } 
 
   async loginUser(dtoLogin: loginDto){
     
