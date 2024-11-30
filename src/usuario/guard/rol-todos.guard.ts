@@ -10,10 +10,11 @@ import { JwtService} from '@nestjs/jwt';
 
 
 import { Request } from 'express';
+import { UsuarioService } from '../usuario.service';
 
 @Injectable()
 export class RolTodosGuard implements CanActivate {
-  constructor(private jwtService: JwtService){}
+  constructor(private usuarioService:UsuarioService, private jwtService: JwtService){}
   
   //metodo para validar rutas
    async canActivate(context: ExecutionContext,) {
@@ -42,6 +43,12 @@ export class RolTodosGuard implements CanActivate {
       //verificar si el rol es cliente o administrador
       if(payload.rol !== 'cliente' && payload.rol !== 'administrador')
         throw new UnauthorizedException();
+
+      const user = await this.usuarioService.findUserById(payload.id)
+
+      if(!user) throw new UnauthorizedException('El usuario no existe')
+
+      request['user'] = user
 
       return true;
     } catch (error) {

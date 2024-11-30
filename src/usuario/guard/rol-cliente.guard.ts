@@ -10,10 +10,11 @@ import { JwtService} from '@nestjs/jwt';
 
 
 import { Request } from 'express';
+import { UsuarioService } from '../usuario.service';
 
 @Injectable()
 export class RolClienteGuard implements CanActivate {
-  constructor(private jwtService: JwtService){}
+  constructor(  private jwtService: JwtService){}
   
   //metodo para validar rutas
    async canActivate(context: ExecutionContext,) {
@@ -42,6 +43,8 @@ export class RolClienteGuard implements CanActivate {
       //verificar si el rol es cliente
       if(payload.rol !== 'cliente')
         throw new UnauthorizedException();
+
+    
 
       return true;
     } catch (error) {
