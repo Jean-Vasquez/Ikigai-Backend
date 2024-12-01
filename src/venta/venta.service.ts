@@ -7,6 +7,7 @@ import { DetalleVenta } from 'src/detalle-venta/entities/detalle-venta.entity';
 import { Producto } from 'src/productos/entities/producto.entity';
 import { CommonService } from 'src/common/common.service';
 import { DetalleVentaService } from 'src/detalle-venta/detalle-venta.service';
+import { ComprobanteService } from 'src/comprobante/comprobante.service';
 @Injectable()
 export class VentaService {
 
@@ -14,15 +15,11 @@ export class VentaService {
     @InjectModel(Venta.name)
     private readonly ventaModel: Model<Venta>,
 
-    @InjectModel(DetalleVenta.name)
-    private readonly detalleVentaModel: Model<DetalleVenta>,
-  
-    @InjectModel(Producto.name)
-    private readonly productoModel: Model<Producto>,
-
     private commonService : CommonService,
 
-    private readonly detalleVentaService : DetalleVentaService
+    private readonly detalleVentaService : DetalleVentaService,
+
+    private readonly comprobanteService : ComprobanteService
   ){}
 
 
@@ -49,6 +46,9 @@ export class VentaService {
     nuevaVenta.total = total
     
     const ventaGuardada = await nuevaVenta.save()
+
+    await this.comprobanteService.create(ventaGuardada._id.toString())
+
     return await ventaGuardada.populate([
       {
         path: 'usuario',
