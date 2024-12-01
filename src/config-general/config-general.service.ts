@@ -1,65 +1,52 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateConfigGeneralDto } from './dto/create-config-general.dto';
-import { UpdateConfigGeneralDto } from './dto/update-config-general.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { ConfigGeneral } from './entities/config-general.entity';
-import { isValidObjectId, Model } from 'mongoose';
-
+import { Model } from 'mongoose';
+import { CommonService } from 'src/common/common.service';
 @Injectable()
 export class ConfigGeneralService {
   
   constructor(
     @InjectModel(ConfigGeneral.name)
-    private readonly configModel: Model<ConfigGeneral>
+    private readonly configModel: Model<ConfigGeneral>,
+    private commonService : CommonService,
   ){}
 
-  async create(createConfigGeneralDto: CreateConfigGeneralDto) {
-
+  async create(){
     try {
-      const config = await this.configModel.create(createConfigGeneralDto)
-      return config
+      // Verifica si ya existe una configuración
+      const existingConfig = await this.configModel.findOne();
+      if (existingConfig) {
+        throw new Error('La configuración general ya existe');
+      }
+      // Crea la configuración con los valores por defecto o personalizados
+      const newConfig = new this.configModel();
+      return await newConfig.save();
     } catch (error) {
-      console.log(error)
+      this.commonService.handleExceptions(error);
     }
   }
 
-  async findAll(){
-    const config = await this.configModel.find()
-    return config
-  }
-
-  async update(term: string, updateConfigGeneralDto: UpdateConfigGeneralDto) {
-    
-    let config: ConfigGeneral
-
-    config = await this.findOne(term)
-    
-    try {
-      await this.configModel.updateOne(updateConfigGeneralDto)
-      return {...config.toJSON(),...updateConfigGeneralDto}
-    } catch (error) {
-      console.log(error)
+async obtenerConfig(){
+  try{
+   const config = await this.configModel.findOne()
+    if (!config) {
+    throw new NotFoundException('Configuración general no encontrada');
     }
-    
+   return config
+  }catch(error){
+    this.commonService.handleExceptions(error)
   }
-
+}
   
-  async findOne(term: string) {
-    let config: ConfigGeneral
-
-    if(isValidObjectId(term)){
-      config = await this.configModel.findById(term)
-    }
-    if(!config){
-      throw new NotFoundException(`No existe registro con el term: ${term}`)
-    }
-    return config
-
+async incrementarNo(){
+  try{
+    const config = await this.obtenerConfig()
+    config.noActual += config.incremento
+    return config.save()
+  }catch(error){
+    this.commonService.handleExceptions(error)
   }
-
-  remove(term:string){
-    
-  }
-
+}
 
 }

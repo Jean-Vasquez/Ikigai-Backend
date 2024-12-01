@@ -1,20 +1,9 @@
-import { IsEnum, IsString, MinLength } from "class-validator";
+import { IsNotEmpty, IsString} from "class-validator";
 
 export class CreateComprobanteDto {
 
-    @IsString()
-    @MinLength(1)
-    seriecomprobante: string;
+@IsNotEmpty()
+@IsString()
+idventa: string;
 
-    @IsEnum(['boleta', 'factura'])
-    tipocomprobante: string;
-
-    @IsString()
-    @MinLength(1)
-    numerocomprobante: string;
-
-    /*@IsString()
-    @MinLength(1)
-    idventa: string;*/
-    //clave foranea
 }

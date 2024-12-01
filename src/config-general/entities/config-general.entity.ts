@@ -1,41 +1,17 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
-
-enum Comprobante {
-    "Boleta",
-    "Factura"
-}
-
 @Schema()
 export class ConfigGeneral extends Document{
 
-
-
-        @Prop({
-            unique:true,
-            required: true,
-        })
-        nomcomprobante: Comprobante
+        @Prop({ required: true,  default: 1})
+        noActual: number;
     
+        @Prop({ required: true, default: 'B001'})
+        serie: string;
 
-        @Prop({
-            unique:true,
-            required: true,
-            default: ("BOO-00")
-        })
-        sercomprobante: string;
-
-
-        @Prop({
-            unique:true,
-            required: true,
-            default :("1")
-            
-        })
-        increcomprobante: number;
+        @Prop({ required: true, default: 1 })
+        incremento: number;
 
 }
-
-
 
 export const ConfigSchema = SchemaFactory.createForClass(ConfigGeneral)

@@ -1,30 +1,20 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
-@Schema()
+@Schema({timestamps:true})
 export class Comprobante extends Document {
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true})
     seriecomprobante: string;
 
-    @Prop({ required: true, enum: ['boleta', 'factura']})
-    tipocomprobante: string;
-
-    @Prop({ required: true })
+    @Prop({ required: true, unique: true})
     numerocomprobante: string;
 
-    //@Prop({ required: true })
-    //idventa: string;
+    @Prop({ required: true, default:'Boleta'})
+    tipocomprobante: string;
 
-    //formato unix
-    @Prop()
-    createdAt: number;
-
-    @Prop()
-    updatedAt?: number
-
-    @Prop()
-    estado: boolean;
+    @Prop({ type: Types.ObjectId, ref: 'Venta', required: true })
+    idventa: Types.ObjectId;
 
 }
 
