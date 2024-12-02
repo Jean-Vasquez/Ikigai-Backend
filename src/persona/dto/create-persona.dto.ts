@@ -1,5 +1,5 @@
-import { IsBoolean, IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, 
-    MaxLength, MinLength, Validate, ValidateIf } from "class-validator";
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, 
+    MaxLength, MinLength, Validate } from "class-validator";
 import { Tipodoc } from "src/common/enums";
 import { ValidateDateOfBirth } from "src/common/Validaciones/validate-date-of-birth";
     
@@ -39,8 +39,5 @@ import { ValidateDateOfBirth } from "src/common/Validaciones/validate-date-of-bi
         @IsOptional()
         correo: string;
         
-        @IsOptional()
-        @IsBoolean()
-        estado:boolean;
     }
     

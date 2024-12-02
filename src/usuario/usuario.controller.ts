@@ -26,7 +26,6 @@ export class UsuarioController {
     return user 
   }
 
-  @UseGuards(RolTodosGuard)
   @Post('/login')
   login(@Body() dtoLogin : loginDto){
     return this.usuarioService.loginUser(dtoLogin)

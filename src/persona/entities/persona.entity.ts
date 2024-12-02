@@ -30,9 +30,7 @@ export class Persona extends Document{
 
     @Prop()
     correo?: string;
-
-    @Prop({default: true})
-    estado?:boolean;
+    
 }
 
 export const PersonaSchema = SchemaFactory.createForClass(Persona);

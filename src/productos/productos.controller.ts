@@ -24,13 +24,11 @@ export class ProductosController {
   }
 
   @Get('cliente')
-  @UseGuards(RolTodosGuard)//esta petición es para el cliente y administrador
   findProductsClient(@Query() paginationDto : PaginationDto) {
     return this.productosService.findProductsClient(paginationDto);
   }
 
   @Get('nuevo')
-  @UseGuards(RolTodosGuard)//esta petición es para el cliente y administrador
   findNewProducts(@Query() paginationDto : PaginationDto) {
     return this.productosService.findNewProducts(paginationDto);
   }

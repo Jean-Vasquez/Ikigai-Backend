@@ -58,11 +58,6 @@ export class UsuarioService {
     }
   }
 
-  async findAll() {
-    return await this.usuarioModel.find().populate('idpersona');
-  }
-
-
   async findUserById(id: string){
 
     const user = await this.usuarioModel.findById(id)

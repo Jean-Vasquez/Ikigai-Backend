@@ -5,11 +5,6 @@ export enum Tipodoc {
   CARNET_EXTRANJERIA = 'CARNET_EXTRANJERIA',
 }
 
-export enum Rol {
-  CLIENTE = 'cliente',
-  ADMINISTRADOR = 'administrador'  
-}
-
 export enum Categoria {
     TAZAS = 'tazas',
     ACCESORIOS = 'accesorios',
