@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ConfigGeneralService } from 'src/config-general/config-general.service';
 import { CommonService } from 'src/common/common.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ComprobanteService {
@@ -36,11 +37,31 @@ export class ComprobanteService {
   }
 
 
-  async findAll(){
+  async findAllUsuario(idUsuario: string, paginationDto: PaginationDto) {
     try {
-      return await this.comprobanteModel.find()
+      const { offset = 0, sortField = 'createdAt', sortOrder = 'asc' } = paginationDto;
+      const comprobantes = await this.comprobanteModel
+        .find({ idventa: idUsuario })
+        .sort({ [sortField]: sortOrder === 'asc' ? 1 : -1 })
+        .skip(offset)
+        .limit(9);
+      return comprobantes;
     } catch (error) {
-      this.commonService.handleExceptions(error)
+      this.commonService.handleExceptions(error);
+    }
+  }
+
+  async findAllAdministrador(paginationDto: PaginationDto) {
+    try {
+      const { offset = 0, sortField = 'createdAt', sortOrder = 'asc' } = paginationDto;
+      const comprobantes = await this.comprobanteModel
+        .find()
+        .sort({ [sortField]: sortOrder === 'asc' ? 1 : -1 })
+        .skip(offset)
+        .limit(9);
+      return comprobantes;
+    } catch (error) {
+      this.commonService.handleExceptions(error);
     }
   }
 
