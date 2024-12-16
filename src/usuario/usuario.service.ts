@@ -65,7 +65,11 @@ export class UsuarioService {
 
   async findUserById(id: string){
 
-    const user = await this.usuarioModel.findById(id)
+    const user = await this.usuarioModel.findById(id).populate('idpersona')
+
+    if(!user){
+      throw new BadRequestException(`No existe ningún usuario`)
+    }
 
     const {contrasena, ...rest} = user.toJSON()
 
