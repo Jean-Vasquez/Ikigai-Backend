@@ -8,6 +8,7 @@ import { RolClienteGuard } from './guard/rol-cliente.guard';
 import { RolTodosGuard } from './guard/rol-todos.guard';
 import { Usuario } from './entities/usuario.entity';
 import { loginResponse } from './interfaces/loginResponse.interrface'; 
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongoid.pipe';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -26,23 +27,19 @@ export class UsuarioController {
     return user 
   }
 
-  @UseGuards(RolTodosGuard)
+  @UseGuards(RolTodosGuard) 
+  @Get('data/:id')
+  findOnePerson(@Param('id',ParseMongoIdPipe) id: string) {
+    return this.usuarioService.findUserById(id);
+  }
+
+
   @Post('/login')
   login(@Body() dtoLogin : loginDto){
     return this.usuarioService.loginUser(dtoLogin)
   }
   
-  @UseGuards(RolTodosGuard)
-  @Get('/check-token')
-  checkToken(@Request() req:Request): loginResponse{
- 
-    const user = req['user'] as Usuario
-      
-      return { 
-        user: user,
-        token: this.usuarioService.getJwtToken({id: user.id, rol: user.rol})
-      }
-   }
+
 
 
   @Patch(':term')
